@@ -21,7 +21,13 @@ class ProductoController extends Controller
         $producto = new Producto();
         $producto->nombre_producto = $request->nombre_producto;
         $producto->precio = $request->precio;
-        $producto->ruta_imagen_producto = $request->ruta_imagen_producto;
+
+        $archivo_solicitud = $request->file('file');
+        $destinationPath = date('FY') . '/';
+        $profileImage = time() . '.' . $request->file('file')->getClientOriginalExtension();
+        $ruta = $archivo_solicitud->move('storage/' . $destinationPath, $profileImage);
+
+        $producto->ruta_imagen_producto = "$ruta";
         $producto->save();
 
         return response()->json([
