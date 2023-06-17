@@ -30,6 +30,8 @@ Route::delete('/productos/{id}', [ProductoController::class, 'destroy']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/allusers', [UserController::class, 'allUsers']);
+Route::delete('/deleteuser/{id}', [UserController::class, 'deleteUser']);
+Route::get('user/{id}', [UserController::class, 'getUser']);
 
 
 Route::group(['middleware' => ['auth:sanctum']], function(){

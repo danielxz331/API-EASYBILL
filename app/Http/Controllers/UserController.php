@@ -9,33 +9,42 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Producto;
 
 class UserController extends Controller
 {
 
     public function register(Request $request)
     {
-        //validacion de los datos
-        $request->validate([
-            'name' => 'required',
-            'tipo_usuario' => 'required',
-            'ruta_imagen_usuario' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed'
-        ]);
-        //alta del usuario
+
+        // $validatedData = $request->validate([
+        //     'name' => 'required|max:255',
+        //     'tipo_usuario' => 'required|max:255',
+        //     'email' => 'required|email|unique:users',
+        //     'password' => 'required|confirmed',
+        //     'password_confirmation' => 'required',
+        //     'file' => 'required|file|mimes:jpeg,png,jpg,gif,svg'
+
+        // ]);
+
         $user = new User();
         $user->name = $request->name;
         $user->tipo_usuario = $request->tipo_usuario;
-        $user->ruta_imagen_usuario = $request->ruta_imagen_usuario;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+
+        $archivo_solicitud = $request->file('file');
+        $destinationPath = date('FY') . '/';
+        $profileImage = time() . '.' . $request->file('file')->getClientOriginalExtension();
+        $ruta = $archivo_solicitud->move('storage/' . $destinationPath, $profileImage);
+
+        $user->ruta_imagen_usuario = "$ruta";
         $user->save();
-        //respuesta
-        // return response()->json([
-        //     "message" => "Metodo register ok"
-        // ]);
-        return response()->json($user);
+
+        return response()->json([
+            'message' => 'usuario creado exitosamente!',
+            'users' => $user
+        ], 201);
     }
 
     public function login(Request $request)
@@ -73,6 +82,26 @@ class UserController extends Controller
     {
         $users = User::all();
         return response()->json($users);
+    }
+
+    public function getUser($id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+        
+        if (!$user) {
+            return response()->json(['mensaje' => 'El usuario no existe'], 404);
+        }
+
+        $user->delete();
+
+        return response()->json(['mensaje' => 'usuario eliminado con éxito'], 200);
     }
 
 }
