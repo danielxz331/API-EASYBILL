@@ -8,7 +8,7 @@ use App\Models\Producto;
 class ProductoController extends Controller
 {
     //trae todos los productos
-    public function index()
+    public function allproducts()
     {
         $productos = Producto::all();
 
@@ -42,28 +42,32 @@ class ProductoController extends Controller
         // Buscar el producto a actualizar en la base de datos
         $producto = Producto::find($id);
 
-        // Si el producto no existe, devolver una respuesta con código 404
-        if (!$producto) {
-            return response()->json(['message' => 'Producto no encontrado'], 404);
+
+        if($request->has('nombre_producto'))
+        {
+            $producto->nombre_producto = $request->nombre_producto;
         }
 
-        // Validar los datos recibidos en la petición
-        $validatedData = $request->validate([
-            'nombre_producto' => 'required|max:255',
-            'precio' => 'required|numeric',
-            'ruta_imagen_producto' => 'required|max:255'
-        ]);
+        if($request->has('precio'))
+        {
+            $producto->precio = $request->precio;
+        }
 
-        // Actualizar los campos del producto con los nuevos valores recibidos
-        $producto->nombre_producto = $validatedData['nombre_producto'];
-        $producto->precio = $validatedData['precio'];
-        $producto->ruta_imagen_producto = $validatedData['ruta_imagen_producto'];
+        if($request->has('file'))
+        {
+            $archivo_solicitud = $request->file('file');
+            $destinationPath = date('FY') . '/';
+            $profileImage = time() . '.' . $request->file('file')->getClientOriginalExtension();
+            $ruta = $archivo_solicitud->move('storage/' . $destinationPath, $profileImage);
 
-        // Guardar los cambios en la base de datos
+            $producto->ruta_imagen_producto = "$ruta";
+        }
         $producto->save();
 
-        // Devolver una respuesta con el producto actualizado y un código 200 de éxito
-        return response()->json(['producto' => $producto], 200);
+        return response()->json([
+            'message' => 'Producto actualizado exitosamente!',
+            'producto' => $producto
+        ], 201);
     }
 
     //elimina producto

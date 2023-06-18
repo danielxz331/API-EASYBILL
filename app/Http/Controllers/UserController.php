@@ -29,6 +29,7 @@ class UserController extends Controller
         $ruta = $archivo_solicitud->move('storage/' . $destinationPath, $profileImage);
 
         $user->ruta_imagen_usuario = "$ruta";
+        $user->assignRole($request->tipo_usuario); //Asignar rol al usuario (administrador, cajero)
         $user->save();
 
         return response()->json([
@@ -47,6 +48,7 @@ class UserController extends Controller
 
         if ($request->has('tipo_usuario')) {
             $user->tipo_usuario = $request->tipo_usuario;
+            $user->assignRole($request->tipo_usuario);
         }
 
         if ($request->has('email')) {

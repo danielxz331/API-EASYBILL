@@ -20,9 +20,12 @@ class UserSeeder extends Seeder
         $user->ruta_imagen_usuario = 'nohay';
         $user->email = 'admin@easybill.com';
         $user->password = bcrypt(123456);
+        $user->assignRole('administrador');
 
         $user->save();
 
-        User::factory(50)->create();
+        User::factory(50)->create()->each(function ($user) {
+            $user->assignRole('cajero');
+        });
     }
 }

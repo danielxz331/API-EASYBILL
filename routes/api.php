@@ -20,19 +20,19 @@ use Illuminate\Support\Facades\Route;
 
 //Rutas productos
 
-Route::get('/productos', [ProductoController::class, 'index']);
-Route::post('/productos', [ProductoController::class, 'store']); 
-Route::put('/productos/{id}', [ProductoController::class, 'update']);
-Route::delete('/productos/{id}', [ProductoController::class, 'destroy']);
+Route::get('/productos', [ProductoController::class, 'allproducts'])->name('api.productos');
+Route::post('/productos', [ProductoController::class, 'store'])->name('api.productos.store');
+Route::post('/editproducto/{id}', [ProductoController::class, 'update'])->name('api.productos.update');
+Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('api.productos.destroy');
 
 //Rutas usuarios
 
-Route::post('/register', [UserController::class, 'register']);
+Route::post('/register', [UserController::class, 'register'])->name('api.register');
 Route::post('/login', [UserController::class, 'login']);
-Route::get('/allusers', [UserController::class, 'allUsers']);
-Route::delete('/deleteuser/{id}', [UserController::class, 'deleteUser']);
-Route::get('user/{id}', [UserController::class, 'getUser']);
-Route::post('user/{id}', [UserController::class, 'updateUser']);
+Route::get('/allusers', [UserController::class, 'allUsers'])->name('api.allusers');
+Route::delete('/deleteuser/{id}', [UserController::class, 'deleteUser'])->name('api.deleteuser');
+Route::get('user/{id}', [UserController::class, 'getUser'])->name('api.getuser');
+Route::post('user/{id}', [UserController::class, 'updateUser'])->name('api.updateuser');
 
 
 Route::group(['middleware' => ['auth:sanctum']], function(){
