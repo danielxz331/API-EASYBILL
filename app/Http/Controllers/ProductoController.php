@@ -83,4 +83,15 @@ class ProductoController extends Controller
 
         return response()->json(['mensaje' => 'Producto eliminado con éxito'], 200);
     }
+
+    public function show($id)
+    {
+        $producto = Producto::find($id);
+
+        if (!$producto) {
+            return response()->json(['mensaje' => 'El producto no existe'], 404);
+        }
+
+        return response()->json($producto, 200);
+    }
 }

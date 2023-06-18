@@ -24,6 +24,7 @@ Route::get('/productos', [ProductoController::class, 'allproducts'])->name('api.
 Route::post('/productos', [ProductoController::class, 'store'])->name('api.productos.store');
 Route::post('/editproducto/{id}', [ProductoController::class, 'update'])->name('api.productos.update');
 Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('api.productos.destroy');
+Route::get('/producto/{id}', [ProductoController::class, 'show'])->name('api.productos.show');
 
 //Rutas usuarios
 
