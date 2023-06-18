@@ -4,29 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-Use App\Models\User;
+use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Producto;
+use Illuminate\Support\Facades\Redis;
 
 class UserController extends Controller
 {
 
     public function register(Request $request)
     {
-
-        // $validatedData = $request->validate([
-        //     'name' => 'required|max:255',
-        //     'tipo_usuario' => 'required|max:255',
-        //     'email' => 'required|email|unique:users',
-        //     'password' => 'required|confirmed',
-        //     'password_confirmation' => 'required',
-        //     'file' => 'required|file|mimes:jpeg,png,jpg,gif,svg'
-
-        // ]);
-
         $user = new User();
         $user->name = $request->name;
         $user->tipo_usuario = $request->tipo_usuario;
@@ -47,6 +37,43 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->has('tipo_usuario')) {
+            $user->tipo_usuario = $request->tipo_usuario;
+        }
+
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('file')) {
+            $archivo_solicitud = $request->file('file');
+            $destinationPath = date('FY') . '/';
+            $profileImage = time() . '.' . $request->file('file')->getClientOriginalExtension();
+            $ruta = $archivo_solicitud->move('storage/' . $destinationPath, $profileImage);
+
+            $user->ruta_imagen_usuario = $ruta;
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Usuario actualizado exitosamente!',
+            'user' => $user
+        ], 200);
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -57,8 +84,8 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('token')->plainTextToken;
-            $cookie = cookie('cookie_token', $token, 60*24);
-            return response(["token"=>$token], Response::HTTP_ACCEPTED)->withCookie($cookie);
+            $cookie = cookie('cookie_token', $token, 60 * 24);
+            return response(["token" => $token], Response::HTTP_ACCEPTED)->withCookie($cookie);
         } else {
             return response(['message' => 'credenciales invalidas'], Response::HTTP_UNAUTHORIZED);
         }
@@ -75,7 +102,7 @@ class UserController extends Controller
     public function logout()
     {
         $cookie = Cookie::forget('cookie_token');
-        return response(["message"=>"Cierre de sesion OK"], Response::HTTP_OK)->withCookie($cookie);
+        return response(["message" => "Cierre de sesion OK"], Response::HTTP_OK)->withCookie($cookie);
     }
 
     public function allUsers()
@@ -94,7 +121,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $user->delete();
-        
+
         if (!$user) {
             return response()->json(['mensaje' => 'El usuario no existe'], 404);
         }
@@ -103,5 +130,4 @@ class UserController extends Controller
 
         return response()->json(['mensaje' => 'usuario eliminado con éxito'], 200);
     }
-
 }
