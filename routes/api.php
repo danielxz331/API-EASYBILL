@@ -23,7 +23,6 @@ Route::post('/login', [UserController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function () {
     // Rutas solo accesibles para el role 'administrador'
-    Route::get('/productos', [ProductoController::class, 'allproducts'])->name('api.productos');
     Route::post('/productos', [ProductoController::class, 'store'])->name('api.productos.store');
     Route::post('/editproducto/{id}', [ProductoController::class, 'update'])->name('api.productos.update');
     Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('api.productos.destroy');
@@ -46,6 +45,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:cajero']], function () {
 Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('user-profile', [UserController::class, 'userProfile']);
     Route::post('logout', [UserController::class, 'logout']);
+    Route::get('/productos', [ProductoController::class, 'allproducts'])->name('api.productos');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
