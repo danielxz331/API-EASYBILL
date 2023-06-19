@@ -27,4 +27,15 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $exception)
+{
+    if ($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException) {
+        return response()->json([
+            'error' => 'No tienes los permisos necesarios para realizar esta acción.'
+        ], 403);
+    }
+
+    return parent::render($request, $exception);
+}
 }
