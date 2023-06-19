@@ -9,7 +9,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Producto;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\Redis;
 
 class UserController extends Controller
@@ -131,5 +132,31 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['mensaje' => 'usuario eliminado con éxito'], 200);
+    }
+
+    public function recuperar(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'No se encontró ningún usuario con esa dirección de correo electrónico'], 404);
+        }
+
+        $token = app('auth.password.broker')->createToken($user);
+
+        // Generar la URL para restablecer la contraseña
+        $resetPasswordUrl = url(config('app.url') . route('password.reset', [
+            'token' => $token,
+            'email' => $user->email,
+        ], false));
+
+        // Envío del correo electrónico
+        Mail::to($user->email)->send(new ResetPassword($resetPasswordUrl));
+
+        return response()->json(['message' => 'Se ha enviado un enlace para restablecer la contraseña al correo electrónico proporcionado']);
     }
 }

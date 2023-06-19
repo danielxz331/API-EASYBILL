@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/recuperar', [UserController::class, 'recuperar']);
 
 Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function () {
     // Rutas solo accesibles para el role 'administrador'
