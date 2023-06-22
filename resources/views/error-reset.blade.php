@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Restablecer contraseña</title>
+    <title>Error de restablecimiento</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,6 +14,15 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
+            text-align: center;
+        }
+        .message {
+            padding: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 20px 0;
         }
         .button {
             display: inline-block;
@@ -36,10 +45,9 @@
 </head>
 <body>
     <div class="container">
-        <h1>Restablecer contraseña</h1>
-        <p>Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para crear una nueva contraseña:</p>
-        <a class="button" href="{{ $resetPasswordUrl }}">Restablecer contraseña</a>
-        <p>Si no has solicitado restablecer tu contraseña, puedes ignorar este correo electrónico.</p>
+        <h1>Error al restablecer contraseña</h1>
+        <p class="message">¡Ha ocurrido un error al restablecer la contraseña!</p>
+        <a class="button" href="{{ route('password.request') }}">Intentar de nuevo</a>
     </div>
 </body>
 </html>

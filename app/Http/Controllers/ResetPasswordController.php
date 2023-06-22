@@ -31,9 +31,9 @@ class ResetPasswordController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return response()->json(['message' => 'Contraseña restablecida correctamente']);
+            return view('complete-reset');
         } else {
-            return response()->json(['message' => 'Ha ocurrido un error al restablecer la contraseña'], 500);
+            return view('error-reset');
         }
     }
 }

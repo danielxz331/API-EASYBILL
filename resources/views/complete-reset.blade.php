@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Restablecer contraseña</title>
+    <title>Restablecimiento exitoso</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,6 +14,15 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
+            text-align: center;
+        }
+        .message {
+            padding: 20px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin: 20px 0;
         }
         .button {
             display: inline-block;
@@ -36,10 +45,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Restablecer contraseña</h1>
-        <p>Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para crear una nueva contraseña:</p>
-        <a class="button" href="{{ $resetPasswordUrl }}">Restablecer contraseña</a>
-        <p>Si no has solicitado restablecer tu contraseña, puedes ignorar este correo electrónico.</p>
+        <h1>Contraseña restablecida</h1>
+        <p class="message">¡Contraseña restablecida correctamente!</p>
     </div>
 </body>
 </html>
