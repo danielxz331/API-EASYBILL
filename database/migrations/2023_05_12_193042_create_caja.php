@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('id_user');
             $table->string('estado');
+            $table->integer('monto');
             $table->timestamps();
             $table->foreign('id_user')->references('id')->on('users');
         });

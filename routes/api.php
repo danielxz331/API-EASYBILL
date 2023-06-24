@@ -4,7 +4,8 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\AsignaController;
-use App\Models\Producto;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\CajaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -35,12 +36,18 @@ Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function 
     Route::get('user/{id}', [UserController::class, 'getUser'])->name('api.getuser');
     Route::post('user/{id}', [UserController::class, 'updateUser'])->name('api.updateuser');
 
+    Route::get('/events', [EventController::class, 'AllEvents'])->name('api.events');
+
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'role:cajero']], function () {
     // Rutas solo accesibles para el role 'cajero'
     Route::post('/venta', [VentaController::class, 'venta'])->name('api.venta');
     Route::post('/asigna', [AsignaController::class, 'asigna'])->name('api.asigna');
+
+    Route::post('/openCaja', [CajaController::class, 'openCaja'])->name('api.caja');
+    Route::post('/closeCaja', [CajaController::class, 'closeCaja'])->name('api.caja');
+    Route::get('/validateCaja', [CajaController::class, 'validateCaja'])->name('api.caja');
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function(){
