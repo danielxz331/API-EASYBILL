@@ -38,9 +38,9 @@ Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function 
 
     Route::get('/events', [EventController::class, 'AllEvents'])->name('api.events');
 
-    Route::get('/ventasdia', [VentaController::class, 'totalVentasDelDia'])->name('api.ventasdia');
-    Route::get('/ventaSemana', [VentaController::class, 'totalVentaSemana'])->name('api.ventassemana');
-    Route::get('/ventaMes', [VentaController::class, 'totalVentaMes'])->name('api.ventasmes');
+    Route::get('/PedidosDia', [VentaController::class, 'totalPedidosDia'])->name('api.pedidosdia');
+    Route::get('/PedidosSemana', [VentaController::class, 'totalPedidosSemana'])->name('api.pedidossemana');
+    Route::get('/PedidosMes', [VentaController::class, 'totalPedidosMes'])->name('api.pedidosmes');
 
 });
 
@@ -50,8 +50,8 @@ Route::group(['middleware' => ['auth:sanctum', 'role:cajero']], function () {
     Route::post('/asigna', [AsignaController::class, 'asigna'])->name('api.asigna');
 
     Route::post('/openCaja', [CajaController::class, 'openCaja'])->name('api.caja');
-    Route::post('/closeCaja', [CajaController::class, 'closeCaja'])->name('api.caja');
-    Route::get('/validateCaja', [CajaController::class, 'validateCaja'])->name('api.caja');
+    Route::post('/closeCaja', [CajaController::class, 'closeCaja'])->name('api.closecaja');
+    Route::get('/validateCaja', [CajaController::class, 'validateCaja'])->name('api.validatecaja');
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function(){

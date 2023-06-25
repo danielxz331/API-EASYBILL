@@ -24,7 +24,7 @@ class VentaController extends Controller
         ], 201);
     }
 
-    public function totalVentasDelDia()
+    public function totalPedidosDia()
     {
         // Inicio y final del día
         $inicioDia = Carbon::now()->startOfDay();
@@ -54,7 +54,7 @@ class VentaController extends Controller
         ], 201);
     }
 
-    public function totalVentaSemana()
+    public function totalPedidosSemana()
     {
         // Primer día de la semana (lunes)
         $inicioSemana = Carbon::now()->startOfWeek();
@@ -86,7 +86,7 @@ class VentaController extends Controller
         ], 201);
     }
 
-    public function totalVentaMes()
+    public function totalPedidosMes()
     {
 
         // Primer día del mes

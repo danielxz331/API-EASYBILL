@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producto;
+use App\Models\Asigna;
+use Carbon\Carbon;
 
 class ProductoController extends Controller
 {
@@ -93,5 +95,30 @@ class ProductoController extends Controller
         }
 
         return response()->json($producto, 200);
+    }
+
+    public function totalVentasDia()
+    {
+        // Inicio y final del día
+        $inicioDia = Carbon::now()->startOfDay();
+        $finDia = Carbon::now()->endOfDay();
+
+        // Consulta
+        $ventas = Asigna::whereBetween('created_at', [$inicioDia, $finDia])
+            ->with(['asigna'])
+            ->get()
+            ->map(function ($producto) {
+                return [
+                    'total_venta' => $producto->asigna->sum('total_por_producto'),
+                    'nombre_cliente' => $producto->nombre_cliente,
+                ];
+            });
+
+        $totalVentas = $ventas->sum('total_venta');
+
+        return response()->json([
+            'total_ventas' => $totalVentas,
+            'detalle_ventas' => $ventas,
+        ], 201);
     }
 }
