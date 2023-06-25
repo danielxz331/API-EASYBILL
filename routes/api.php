@@ -38,6 +38,10 @@ Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function 
 
     Route::get('/events', [EventController::class, 'AllEvents'])->name('api.events');
 
+    Route::get('/ventasdia', [VentaController::class, 'totalVentasDelDia'])->name('api.ventasdia');
+    Route::get('/ventaSemana', [VentaController::class, 'totalVentaSemana'])->name('api.ventassemana');
+    Route::get('/ventaMes', [VentaController::class, 'totalVentaMes'])->name('api.ventasmes');
+
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'role:cajero']], function () {

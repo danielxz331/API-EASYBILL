@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Asigna;
+use App\Models\User;
 
 class Venta extends Model
 {
@@ -12,8 +13,13 @@ class Venta extends Model
 
     protected $table = 'venta';
 
-    public function asigna() // el nombre de la función define el nombre de la relación
+    public function asigna() 
     {
-        return $this->hasMany(Asigna::class, 'id_venta'); // asumiendo que la relación es uno a muchos
+        return $this->hasMany(Asigna::class, 'id_venta'); 
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'id_user');
     }
 }
