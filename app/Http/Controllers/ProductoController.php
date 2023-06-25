@@ -162,4 +162,81 @@ class ProductoController extends Controller
         // Retorna el resultado como un JSON
         return response()->json($productosVendidos);
     }
+
+    public function platoMasVendidoDelDia() {
+        // Inicio y final del día
+        $inicioDia = Carbon::now()->startOfDay();
+        $finDia = Carbon::now()->endOfDay();
+    
+        // Consulta
+        $productosVendidos = Asigna::whereBetween('created_at', [$inicioDia, $finDia])
+            ->with('producto')
+            ->get()
+            ->groupBy('id_producto')
+            ->map(function ($asignaciones) {
+                return [
+                    'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'cantidad' => $asignaciones->sum('cantidad'),
+                    'ruta_imagen_producto' => $asignaciones[0]->producto->ruta_imagen_producto,
+                ];
+            });
+    
+        // Encuentra el producto más vendido
+        $productoMasVendido = $productosVendidos->sortByDesc('cantidad')->first();
+    
+        // Retorna el resultado como un JSON
+        return response()->json($productoMasVendido);
+    }
+
+    public function platoMasVendidoDeLaSemana()
+    {
+        // Inicio y final de la semana
+        $inicioSemana = Carbon::now()->startOfWeek();
+        $finSemana = Carbon::now()->endOfWeek();
+
+        // Consulta
+        $productosVendidos = Asigna::whereBetween('created_at', [$inicioSemana, $finSemana])
+            ->with('producto')
+            ->get()
+            ->groupBy('id_producto')
+            ->map(function ($asignaciones) {
+                return [
+                    'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'cantidad' => $asignaciones->sum('cantidad'),
+                    'ruta_imagen_producto' => $asignaciones[0]->producto->ruta_imagen_producto,
+                ];
+            });
+
+        // Encuentra el producto más vendido
+        $productoMasVendido = $productosVendidos->sortByDesc('cantidad')->first();
+
+        // Retorna el resultado como un JSON
+        return response()->json($productoMasVendido);
+    }
+
+    public function platoMasVendidoDelMes()
+    {
+        // Inicio y final del mes
+        $inicioMes = Carbon::now()->startOfMonth();
+        $finMes = Carbon::now()->endOfMonth();
+
+        // Consulta
+        $productosVendidos = Asigna::whereBetween('created_at', [$inicioMes, $finMes])
+            ->with('producto')
+            ->get()
+            ->groupBy('id_producto')
+            ->map(function ($asignaciones) {
+                return [
+                    'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'cantidad' => $asignaciones->sum('cantidad'),
+                    'ruta_imagen_producto' => $asignaciones[0]->producto->ruta_imagen_producto,
+                ];
+            });
+
+        // Encuentra el producto más vendido
+        $productoMasVendido = $productosVendidos->sortByDesc('cantidad')->first();
+
+        // Retorna el resultado como un JSON
+        return response()->json($productoMasVendido);
+    }
 }

@@ -47,6 +47,10 @@ Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function 
     Route::get('/VentasSemana', [ProductoController::class, 'totalVentasSemana'])->name('api.ventassemana');
     Route::get('/VentasMes', [ProductoController::class, 'totalVentasMes'])->name('api.ventasmes');
 
+    Route::get('/ProductoDia', [ProductoController::class, 'platoMasVendidoDelDia'])->name('api.productodia');
+    Route::get('/ProductoSemana', [ProductoController::class, 'platoMasVendidoDeLaSemana'])->name('api.productosemana');
+    Route::get('/ProductoMes', [ProductoController::class, 'platoMasVendidoDelMes'])->name('api.productomes');
+
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'role:cajero']], function () {
