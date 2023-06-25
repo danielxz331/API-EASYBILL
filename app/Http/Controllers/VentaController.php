@@ -118,4 +118,100 @@ class VentaController extends Controller
             'detalle_ventas' => $ventas,
         ], 201);
     }
+
+    public function usuarioConMasVentas()
+    {
+        // Primer día del mes
+        $inicioMes = Carbon::now()->startOfMonth();
+
+        // Último día del mes
+        $finMes = Carbon::now()->endOfMonth();
+
+        // Consulta
+        $ventas = Venta::whereBetween('created_at', [$inicioMes, $finMes])
+            ->with(['asigna', 'usuario'])
+            ->get()
+            ->groupBy('id_user')
+            ->map(function ($ventas) {
+                return [
+                    'usuario' => $ventas[0]->usuario->name, // asumiendo que el campo de nombre es 'name' en el modelo de usuario
+                    'ruta_imagen_usuario' => $ventas[0]->usuario->ruta_imagen_usuario, // asumiendo que el campo de ruta de imagen es 'ruta_imagen_usuario' en el modelo de usuario
+                    'ventas' => $ventas->count(),
+                    'total_venta' => $ventas->sum(function ($venta) {
+                        return $venta->asigna->sum('total_por_producto'); // asumiendo que el campo de precio es 'precio' en el modelo de asigna
+                    }),
+                ];
+            });
+
+        // Encuentra el usuario con más ventas
+        $usuarioConMasVentas = $ventas->sortByDesc('total_venta')->first();
+
+        // Retorna el resultado como un JSON
+        return response()->json($usuarioConMasVentas);
+    }
+
+    public function mejorDiaDeVentas()
+    {
+        // Inicio y final del mes
+        $inicioMes = Carbon::now()->startOfMonth();
+        $finMes = Carbon::now()->endOfMonth();
+
+        // Consulta
+        $ventas = Venta::whereBetween('created_at', [$inicioMes, $finMes])
+            ->with(['asigna', 'usuario'])
+            ->get()
+            ->groupBy(function ($venta) {
+                return Carbon::parse($venta->created_at)->format('Y-m-d'); // Agrupa las ventas por día
+            })
+            ->map(function ($ventasPorDia, $dia) {
+                return [
+                    'dia' => $dia, // Agrega el día al resultado
+                    'ventas' => $ventasPorDia->count(),
+                    'total_venta' => $ventasPorDia->sum(function ($venta) {
+                        return $venta->asigna->sum('total_por_producto'); // asumiendo que el campo de precio es 'precio' en el modelo de asigna
+                    }),
+                ];
+            });
+
+        // Encuentra el día con más ventas
+        $mejorDiaDeVentas = $ventas->sortByDesc('total_venta')->first();
+
+        // Retorna el resultado como un JSON
+        return response()->json($mejorDiaDeVentas);
+    }
+
+    public function mejorSemanaDeVentas()
+    {
+        // Inicio y final del mes
+        $inicioMes = Carbon::now()->startOfMonth();
+        $finMes = Carbon::now()->endOfMonth();
+    
+        // Consulta
+        $ventas = Venta::whereBetween('created_at', [$inicioMes, $finMes])
+            ->with(['asigna', 'usuario'])
+            ->get()
+            ->groupBy(function ($venta) {
+                return Carbon::parse($venta->created_at)->format('W'); // Agrupa las ventas por semana
+            })
+            ->map(function ($ventasPorSemana, $semana) {
+                $inicioSemana = Carbon::now()->startOfYear()->addWeeks($semana)->startOfWeek();
+                $finSemana = Carbon::now()->startOfYear()->addWeeks($semana)->endOfWeek();
+    
+                return [
+                    'semana' => $semana, // Agrega la semana al resultado
+                    'inicio_semana' => $inicioSemana->toDateString(), // Agrega el inicio de la semana al resultado
+                    'fin_semana' => $finSemana->toDateString(), // Agrega el final de la semana al resultado
+                    'ventas' => $ventasPorSemana->count(),
+                    'total_venta' => $ventasPorSemana->sum(function ($venta) {
+                        return $venta->asigna->sum('total_por_producto'); // asumiendo que el campo de precio es 'precio' en el modelo de asigna
+                    }),
+                ];
+            });
+    
+        // Encuentra la semana con más ventas
+        $mejorSemanaDeVentas = $ventas->sortByDesc('total_venta')->first();
+    
+        // Retorna el resultado como un JSON
+        return response()->json($mejorSemanaDeVentas);
+    }
 }

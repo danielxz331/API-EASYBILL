@@ -7,6 +7,7 @@ use App\Http\Controllers\AsignaController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\CajaController;
 use App\Models\Producto;
+use App\Models\Venta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/recuperar', [UserController::class, 'recuperar']);
 
@@ -51,6 +53,10 @@ Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function 
     Route::get('/ProductoSemana', [ProductoController::class, 'platoMasVendidoDeLaSemana'])->name('api.productosemana');
     Route::get('/ProductoMes', [ProductoController::class, 'platoMasVendidoDelMes'])->name('api.productomes');
 
+    Route::get('/UsuarioVendedor', [VentaController::class, 'usuarioConMasVentas'])->name('api.usuariovendedor');
+
+    Route::get('/MejorDia', [VentaController::class, 'mejorDiaDeVentas'])->name('api.mejordia');
+    Route::get('/MejorSemana', [VentaController::class, 'mejorSemanaDeVentas'])->name('api.mejorsemana');
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'role:cajero']], function () {
@@ -63,7 +69,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:cajero']], function () {
     Route::get('/validateCaja', [CajaController::class, 'validateCaja'])->name('api.validatecaja');
 });
 
-Route::group(['middleware' => ['auth:sanctum']], function(){
+Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('user-profile', [UserController::class, 'userProfile']);
     Route::post('logout', [UserController::class, 'logout']);
     Route::get('/productos', [ProductoController::class, 'allproducts'])->name('api.productos');

@@ -110,7 +110,7 @@ class UserController extends Controller
 
     public function allUsers()
     {
-        $users = User::all();
+        $users = User::where('tipo_usuario', '!=', 'administrador')->get();
         return response()->json($users);
     }
 
