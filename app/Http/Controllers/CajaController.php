@@ -28,7 +28,10 @@ class CajaController extends Controller
         $inicioDia = Carbon::now()->startOfDay();
         $finDia = Carbon::now()->endOfDay();
         $caja = Caja::where('estado', "abierta")->where('created_at', '>', $inicioDia)->where('created_at', '<', $finDia)->first();
-        if ($caja == null) {
+
+        $UltimoEstadoCaja = Caja::orderBy('id', 'desc')->first();
+
+        if ($caja == null || $UltimoEstadoCaja->estado == "cerrada") {
             return response()->json([
                 'message' => 'No hay caja abierta'
             ], 208);
