@@ -45,18 +45,15 @@ class ProductoController extends Controller
         $producto = Producto::find($id);
 
 
-        if($request->has('nombre_producto'))
-        {
+        if ($request->has('nombre_producto')) {
             $producto->nombre_producto = $request->nombre_producto;
         }
 
-        if($request->has('precio'))
-        {
+        if ($request->has('precio')) {
             $producto->precio = $request->precio;
         }
 
-        if($request->has('file'))
-        {
+        if ($request->has('file')) {
             $archivo_solicitud = $request->file('file');
             $destinationPath = date('FY') . '/';
             $profileImage = time() . '.' . $request->file('file')->getClientOriginalExtension();
@@ -104,21 +101,65 @@ class ProductoController extends Controller
         $finDia = Carbon::now()->endOfDay();
 
         // Consulta
-        $ventas = Asigna::whereBetween('created_at', [$inicioDia, $finDia])
-            ->with(['asigna'])
+        $productosVendidos = Asigna::whereBetween('created_at', [$inicioDia, $finDia])
+            ->with('producto')
             ->get()
-            ->map(function ($producto) {
+            ->groupBy('id_producto')
+            ->map(function ($asignaciones) {
                 return [
-                    'total_venta' => $producto->asigna->sum('total_por_producto'),
-                    'nombre_cliente' => $producto->nombre_cliente,
+                    'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'cantidad' => $asignaciones->sum('cantidad'),
+                    'total' => $asignaciones->sum('total_por_producto'),
                 ];
             });
 
-        $totalVentas = $ventas->sum('total_venta');
+        // Retorna el resultado como un JSON
+        return response()->json($productosVendidos);
+    }
 
-        return response()->json([
-            'total_ventas' => $totalVentas,
-            'detalle_ventas' => $ventas,
-        ], 201);
+    public function totalVentasSemana()
+    {
+        // Inicio y final de la semana
+        $inicioSemana = Carbon::now()->startOfWeek();
+        $finSemana = Carbon::now()->endOfWeek();
+
+        // Consulta
+        $productosVendidos = Asigna::whereBetween('created_at', [$inicioSemana, $finSemana])
+            ->with('producto')
+            ->get()
+            ->groupBy('id_producto')
+            ->map(function ($asignaciones) {
+                return [
+                    'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'cantidad' => $asignaciones->sum('cantidad'),
+                    'total' => $asignaciones->sum('total_por_producto'),
+                ];
+            });
+
+        // Retorna el resultado como un JSON
+        return response()->json($productosVendidos);
+    }
+
+    public function totalVentasMes()
+    {
+        // Inicio y final del mes
+        $inicioMes = Carbon::now()->startOfMonth();
+        $finMes = Carbon::now()->endOfMonth();
+
+        // Consulta
+        $productosVendidos = Asigna::whereBetween('created_at', [$inicioMes, $finMes])
+            ->with('producto')
+            ->get()
+            ->groupBy('id_producto')
+            ->map(function ($asignaciones) {
+                return [
+                    'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'cantidad' => $asignaciones->sum('cantidad'),
+                    'total' => $asignaciones->sum('total_por_producto'),
+                ];
+            });
+
+        // Retorna el resultado como un JSON
+        return response()->json($productosVendidos);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\AsignaController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\CajaController;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,10 @@ Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function 
     Route::get('/PedidosDia', [VentaController::class, 'totalPedidosDia'])->name('api.pedidosdia');
     Route::get('/PedidosSemana', [VentaController::class, 'totalPedidosSemana'])->name('api.pedidossemana');
     Route::get('/PedidosMes', [VentaController::class, 'totalPedidosMes'])->name('api.pedidosmes');
+
+    Route::get('/VentasDia', [ProductoController::class, 'totalVentasDia'])->name('api.ventasdia');
+    Route::get('/VentasSemana', [ProductoController::class, 'totalVentasSemana'])->name('api.ventassemana');
+    Route::get('/VentasMes', [ProductoController::class, 'totalVentasMes'])->name('api.ventasmes');
 
 });
 
