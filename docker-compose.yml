@@ -23,7 +23,7 @@ services:
     container_name: easybill-nginx
     restart: unless-stopped
     ports:
-      - 8001:80
+      - 80:80
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d/
