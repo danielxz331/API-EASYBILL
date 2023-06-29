@@ -24,11 +24,14 @@ services:
     restart: unless-stopped
     ports:
       - 80:80
+      - 443:443
     volumes:
       - ./:/var/www
-      - ./docker-compose/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker-compose/nginx/apihelpdesk.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
     networks:
       - easybill
+
 
   postgres:
     container_name: easybill-postgres
