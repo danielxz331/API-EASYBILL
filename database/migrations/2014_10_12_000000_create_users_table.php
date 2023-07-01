@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('tipo_usuario');
+            $table->integer('activo')->default(1);
             $table->string('ruta_imagen_usuario');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

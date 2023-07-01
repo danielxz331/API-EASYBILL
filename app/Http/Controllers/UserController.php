@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Venta;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -110,7 +111,7 @@ class UserController extends Controller
 
     public function allUsers()
     {
-        $users = User::where('tipo_usuario', '!=', 'administrador')->get();
+        $users = User::where('tipo_usuario', '!=', 'administrador')->where('activo', 1)->get();
         return response()->json($users);
     }
 
@@ -122,16 +123,24 @@ class UserController extends Controller
 
     public function deleteUser($id)
     {
+
+        $ventas = Venta::where('id_usuario', $id)->get();
+
         $user = User::find($id);
-        $user->delete();
 
         if (!$user) {
             return response()->json(['mensaje' => 'El usuario no existe'], 404);
         }
 
-        $user->delete();
+        if ($ventas > 0) {
+            $user->activo = 0;  
+            $user->save();
+            return response()->json(['mensaje' => 'El usuario ha sido bloqueado'], 200);
+        } else {
+            $user->delete();
+            return response()->json(['mensaje' => 'El usuario ha sido eliminado'], 200);
+        }
 
-        return response()->json(['mensaje' => 'usuario eliminado con éxito'], 200);
     }
 
     public function recuperar(Request $request)

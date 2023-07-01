@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre_producto');
             $table->float('precio');
             $table->string('ruta_imagen_producto');
+            $table->integer('activo')->default(1);
             $table->timestamps();
         });
     }

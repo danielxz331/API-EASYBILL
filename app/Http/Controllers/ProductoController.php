@@ -12,7 +12,7 @@ class ProductoController extends Controller
     //trae todos los productos
     public function allproducts()
     {
-        $productos = Producto::all();
+        $productos = Producto::where('activo', 1)->get();
 
         return response()->json($productos);
     }
@@ -72,15 +72,24 @@ class ProductoController extends Controller
     //elimina producto
     public function destroy($id)
     {
+
+        $asigna = Asigna::where('id_producto', $id)->get();
         $producto = Producto::find($id);
+
+        if (count($asigna) > 0) {
+            $producto->activo = 0;
+            $producto->save();
+            return response()->json(['mensaje' => 'El producto bloqueado'], 200);
+        } else {
+            $producto->delete();
+            return response()->json(['mensaje' => 'Producto eliminado con éxito'], 200);
+        }
+
+        
 
         if (!$producto) {
             return response()->json(['mensaje' => 'El producto no existe'], 404);
         }
-
-        $producto->delete();
-
-        return response()->json(['mensaje' => 'Producto eliminado con éxito'], 200);
     }
 
     public function show($id)
