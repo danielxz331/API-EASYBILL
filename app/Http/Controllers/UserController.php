@@ -124,7 +124,7 @@ class UserController extends Controller
     public function deleteUser($id)
     {
 
-        $ventas = Venta::where('id_usuario', $id)->get();
+        $ventas = Venta::where('id_user', $id)->get();
 
         $user = User::find($id);
 
