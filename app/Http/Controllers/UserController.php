@@ -132,7 +132,7 @@ class UserController extends Controller
             return response()->json(['mensaje' => 'El usuario no existe'], 404);
         }
 
-        if ($ventas > 0) {
+        if (count($ventas) > 0) {
             $user->activo = 0;  
             $user->save();
             return response()->json(['mensaje' => 'El usuario ha sido bloqueado'], 200);
