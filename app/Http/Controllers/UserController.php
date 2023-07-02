@@ -115,6 +115,12 @@ class UserController extends Controller
         return response()->json($users);
     }
 
+    public function CantidadCajeros()
+    {
+        $users = User::where('tipo_usuario', 'cajero')->where('activo', 1)->get();
+        return response()->json(count($users));
+    }
+
     public function getUser($id)
     {
         $user = User::find($id);

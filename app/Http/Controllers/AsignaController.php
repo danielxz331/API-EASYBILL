@@ -20,4 +20,13 @@ class AsignaController extends Controller
             'asigna' => $asigna
         ], 201);
     }
+
+    public function TotalIngresos()
+    {
+        $ingresos = Asigna::sum('total_por_producto');
+
+        return response()->json([
+            'total_ingresos' => $ingresos,
+        ], 201);
+    }
 }

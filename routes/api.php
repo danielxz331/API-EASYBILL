@@ -38,16 +38,20 @@ Route::group(['middleware' => ['auth:sanctum', 'role:administrador']], function 
     Route::delete('/deleteuser/{id}', [UserController::class, 'deleteUser'])->name('api.deleteuser');
     Route::get('user/{id}', [UserController::class, 'getUser'])->name('api.getuser');
     Route::post('user/{id}', [UserController::class, 'updateUser'])->name('api.updateuser');
+    Route::get('/CantidadEmpleados', [UserController::class, 'CantidadCajeros'])->name('api.cantidadempleados');
 
     Route::get('/events', [EventController::class, 'AllEvents'])->name('api.events');
 
     Route::get('/PedidosDia', [VentaController::class, 'totalPedidosDia'])->name('api.pedidosdia');
     Route::get('/PedidosSemana', [VentaController::class, 'totalPedidosSemana'])->name('api.pedidossemana');
     Route::get('/PedidosMes', [VentaController::class, 'totalPedidosMes'])->name('api.pedidosmes');
+    Route::get('/CantidadVentas', [VentaController::class, 'TotalCantidadVentas'])->name('api.cantidadventas');
 
     Route::get('/VentasDia', [ProductoController::class, 'totalVentasDia'])->name('api.ventasdia');
     Route::get('/VentasSemana', [ProductoController::class, 'totalVentasSemana'])->name('api.ventassemana');
     Route::get('/VentasMes', [ProductoController::class, 'totalVentasMes'])->name('api.ventasmes');
+
+    Route::get('/TotalIngresos', [AsignaController::class, 'TotalIngresos'])->name('api.totalingresos');
 
     Route::get('/ProductoDia', [ProductoController::class, 'platoMasVendidoDelDia'])->name('api.productodia');
     Route::get('/ProductoSemana', [ProductoController::class, 'platoMasVendidoDeLaSemana'])->name('api.productosemana');

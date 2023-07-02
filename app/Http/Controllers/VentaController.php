@@ -214,4 +214,13 @@ class VentaController extends Controller
         // Retorna el resultado como un JSON
         return response()->json($mejorSemanaDeVentas);
     }
+
+    public function TotalCantidadVentas()
+    {
+        $ventas = Venta::all();
+
+        return response()->json([
+            'total_ventas' => $ventas->count(),
+        ], 201);
+    }
 }
