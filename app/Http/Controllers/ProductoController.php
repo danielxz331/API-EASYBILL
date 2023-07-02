@@ -117,6 +117,7 @@ class ProductoController extends Controller
             ->map(function ($asignaciones) {
                 return [
                     'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'ruta_imagen_producto' => $asignaciones[0]->producto->ruta_imagen_producto,
                     'cantidad' => $asignaciones->sum('cantidad'),
                     'total' => $asignaciones->sum('total_por_producto'),
                 ];
@@ -140,6 +141,7 @@ class ProductoController extends Controller
             ->map(function ($asignaciones) {
                 return [
                     'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'ruta_imagen_producto' => $asignaciones[0]->producto->ruta_imagen_producto,
                     'cantidad' => $asignaciones->sum('cantidad'),
                     'total' => $asignaciones->sum('total_por_producto'),
                 ];
@@ -163,6 +165,7 @@ class ProductoController extends Controller
             ->map(function ($asignaciones) {
                 return [
                     'producto' => $asignaciones[0]->producto->nombre_producto,
+                    'ruta_imagen_producto' => $asignaciones[0]->producto->ruta_imagen_producto,
                     'cantidad' => $asignaciones->sum('cantidad'),
                     'total' => $asignaciones->sum('total_por_producto'),
                 ];
